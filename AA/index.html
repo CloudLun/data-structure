@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
+    <title>Document</title>
+    <style>
+
+
+    </style>
+</head>
+
+<body>
+    <div class="app-wrapper">
+        <nav>
+            <ul class="main-font-color">
+                <li>Contribute</li>
+                <li>A.A Meetings</li>
+                <li>Be Of Service</li>
+                <li>Group Source</li>
+                <li>What is AA</li>
+                <li>What is NYIG</li>
+            </ul>
+        </nav>
+        <main>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
+            <div class="table-container">
+                <div class="select-container">
+                    <select name="where" id="where">
+                        <option value="everywhere">Everywhere</option>
+                    </select>
+                    <select name="days" id="days">
+                        <option value="sunday">Sunday</option>
+                    </select>
+                    <select name="times" id="times">
+                        <option value="anytime">Any Time</option>
+                    </select>
+                    <select name="types" id="types">
+                        <option value="active">Active</option>
+                    </select>
+                </div>
+
+                <div class="title">
+                    <div>Time</div>
+                    <div>Meeting</div>
+                    <div>Location</div>
+                    <div>Address</div>
+                </div>
+                <div class="content-container">
+                </div>
+
+            </div>
+
+        </main>
+
+
+    </div>
+
+
+    <!-- <script src="./map.js"></script> -->
+    <script src="./parseData.js"></script>
+</body>
+
+</html>
