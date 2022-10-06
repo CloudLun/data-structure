@@ -24,10 +24,10 @@ $("tr").each(function (i, elem) {
 });
 
 for(let i=0; i<22; i++){
-  finalData[i] = parseDataHandler(rawData[i])
+  finalData[i] = parseData(rawData[i])
 }
 
-function parseDataHandler(data, number) {
+function parseData(data, number) {
   let aaData = {
     Address: {},
     Hours: [],
