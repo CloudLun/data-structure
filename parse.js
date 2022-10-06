@@ -1,9 +1,38 @@
-let aaData = {
-  Address: {},
-  Hours: [],
-};
+const fs = require("fs");
+const cheerio = require("cheerio");
+
+// load the cheerio object into a variable, `content`
+// which holds data and metadata about the html file (written as txt)
+// load `content` into a cheerio object
+var content = fs.readFileSync("data/m01.txt");
+var $ = cheerio.load(content);
+
+let rawData = [];
+let finalData = []
+
+
+for (let i = 0; i < 22; i++) {
+  rawData[i] = [];
+}
+
+$("tr").each(function (i, elem) {
+  if ($(elem).attr("style") == "margin-bottom:10px") {
+    // console.log($(elem).html());
+    // console.log('*************')
+    rawData[i - 4] = $(elem).html().replace("\t", "");
+  }
+});
+
+for(let i=0; i<22; i++){
+  finalData[i] = parseDataHandler(rawData[i])
+}
 
 function parseDataHandler(data, number) {
+  let aaData = {
+    Address: {},
+    Hours: [],
+  };
+  
   let metadata = data.split("</td>");
   let locationList = metadata[0];
   let match;
@@ -68,6 +97,7 @@ function parseDataHandler(data, number) {
   aaData["Address"]["wheelChair"] = chair;
 
   let timeList = metadata[1];
+
   // DAY
   let reDayHead = new RegExp("				  	    <b>", "ig");
   let dayHead = [];
@@ -144,7 +174,7 @@ function parseDataHandler(data, number) {
     aaData["Hours"][i]["end_time"] = endTime[i];
   }
 
-  //   // TYPE
+  // TYPE
   let retypeHead = new RegExp("Type</b>", "ig");
   let typeHead = [];
   while ((match = retypeHead.exec(timeList))) {
@@ -192,32 +222,7 @@ function parseDataHandler(data, number) {
       aaData["Hours"][i]["special_interest"] = "";
     }
   }
+  return aaData
 }
 
-const fs = require("fs");
-const cheerio = require("cheerio");
-
-// load the cheerio object into a variable, `content`
-// which holds data and metadata about the html file (written as txt)
-var content = fs.readFileSync("data/m01.txt");
-
-// load `content` into a cheerio object
-var $ = cheerio.load(content);
-
-let rawData = [];
-
-for (let i = 0; i < 22; i++) {
-  rawData[i] = [];
-}
-
-$("tr").each(function (i, elem) {
-  if ($(elem).attr("style") == "margin-bottom:10px") {
-    // console.log($(elem).html());
-    // console.log('*************')
-    rawData[i - 4] = $(elem).html().replace("\t", "");
-
-  }
-});
-
-parseDataHandler(rawData[20])
-console.log(aaData);
+console.log(finalData)
