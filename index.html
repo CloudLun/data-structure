@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="./style.css">
+    <link rel="stylesheet" href="./scss/style.css">
     <script src="https://d3js.org/d3.v7.min.js"></script>
     <script src="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.js"></script>
     <link href="https://api.mapbox.com/mapbox-gl-js/v2.10.0/mapbox-gl.css" rel="stylesheet">
@@ -18,17 +18,19 @@
 
 <body>
     <div class="app-wrapper">
-        <nav>
-            <ul class="main-font-color">
-                <li>Contribute</li>
-                <li>A.A Meetings</li>
-                <li>Be Of Service</li>
-                <li>Group Source</li>
-                <li>What is AA</li>
-                <li>What is NYIG</li>
-            </ul>
-        </nav>
-        <main>
+        <div class="nav-container">
+            <button class="nav-toggle" aria-controls="navigation" aria-expanded="false"></button>
+            <nav>
+                <ul class="nav" data-visible='false'>
+                    <li>Contribute</li>
+                    <li>A.A Meetings</li>
+                    <li>Be Of Service</li>
+                    <li>Group Source</li>
+                    <li>What is AA</li>
+                    <li>What is NYIG</li>
+                </ul>
+            </nav>
+        </div>
             <div class="map-container">
                 <div id="map"></div>
             </div>
@@ -56,17 +58,16 @@
                 </div>
                 <div class="content-container">
                 </div>
-
             </div>
 
-        </main>
 
 
     </div>
 
 
-    <!-- <script src="./map.js"></script> -->
+
     <script src="./map.js"></script>
+    <script src="./app.js"></script>
 </body>
 
 </html>
