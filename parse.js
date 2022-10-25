@@ -4,35 +4,43 @@ const cheerio = require("cheerio");
 // load the cheerio object into a variable, `content`
 // which holds data and metadata about the html file (written as txt)
 // load `content` into a cheerio object
-var content = fs.readFileSync("data/m01.txt");
-var $ = cheerio.load(content);
 
 let rawData = [];
-let finalData = []
+let finalData = [];
 
+for (let n = 0; n < 10; n++) {
+  let content;
 
-for (let i = 0; i < 22; i++) {
-  rawData[i] = [];
+  n === 9
+    ? (content = fs.readFileSync("data/m10.txt"))
+    : (content = fs.readFileSync(`data/m0${n + 1}.txt`));
+
+  var $ = cheerio.load(content);
+
+  $("tr").each(function (i, elem) {
+    if ($(elem).attr("style") == "margin-bottom:10px") {
+      // console.log($(elem).html());
+      // console.log('*************')
+      rawData[i - 4] = $(elem).html().replace("\t", "");
+      finalData.push(parseData(rawData[i - 4]));
+    }
+  });
 }
 
-$("tr").each(function (i, elem) {
-  if ($(elem).attr("style") == "margin-bottom:10px") {
-    // console.log($(elem).html());
-    // console.log('*************')
-    rawData[i - 4] = $(elem).html().replace("\t", "");
-  }
-});
+// let jsonData = JSON.stringify(finalData);
+// fs.writeFile("./data/data.json", jsonData, function (err) {
+//   if (err) throw err;
+// });
 
-for(let i=0; i<22; i++){
-  finalData[i] = parseData(rawData[i])
-}
+console.log(finalData.length);
+// console.log(finalData);
 
 function parseData(data, number) {
   let aaData = {
     Address: {},
     Hours: [],
   };
-  
+
   let metadata = data.split("</td>");
   let locationList = metadata[0];
   let match;
@@ -61,9 +69,17 @@ function parseData(data, number) {
     addressHead + 15,
     addressTail.length === 1 ? addressTail[0] : addressTail[1]
   );
-  aaData["Address"]["address"] = address
+
+  let mainAddress = address.split(",")[0];
+  let sideAddress = address.split(",")[1];
+
+  aaData["Address"]["mainAddress"] = mainAddress
     .trim()
-    .replace(/\t|\n|br|<|>/g, "")
+    .replace(/\t|\n|br|<|>/g, "");
+
+  aaData["Address"]["sideAddress"] = sideAddress
+    .trim()
+    .replace(/\t|\n|br|<|>/g, "");
 
   // DIRECTION
   let reDirection = new RegExp("<br>", "ig");
@@ -84,9 +100,7 @@ function parseData(data, number) {
   let boxHead = locationList.search('Box">');
   let boxTail = locationList.search("</div>");
   let box = locationList.substring(boxHead + 15, boxTail - 7);
-  aaData["Address"]["grayBox"] = box
-    .trim()
-    .replace(/\t|\n|br|<|>/g, "")
+  aaData["Address"]["grayBox"] = box.trim().replace(/\t|\n|br|<|>/g, "");
 
   // WHEEL CHAIR
   let chairHead = locationList.search("Wheelchair access");
@@ -145,13 +159,12 @@ function parseData(data, number) {
     aaData["Hours"][i]["start_time"] = startTime[i];
   }
 
-// END TIME
+  // END TIME
   let reEndTimeHead = new RegExp("<b>to</b>", "ig");
   let endTimeHead = [];
   while ((match = reEndTimeHead.exec(timeList))) {
     endTimeHead.push(match.index);
   }
-
 
   let reEndTimeTail = new RegExp("<b>Mee", "ig");
   let endTimeTail = [];
@@ -222,7 +235,5 @@ function parseData(data, number) {
       aaData["Hours"][i]["special_interest"] = "";
     }
   }
-  return aaData
+  return aaData;
 }
-
-console.log(finalData)

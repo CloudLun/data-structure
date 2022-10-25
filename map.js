@@ -84,6 +84,7 @@ const data = [
   },
 ];
 
+
 let mapContainer = d3
   .select(container)
   .append("svg")
