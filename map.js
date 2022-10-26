@@ -67,7 +67,8 @@ const data = [
       meeting: "RIVERTON - Riverton",
       address: "219 West 132nd Street, Cafeteria",
       ZIP: "1002",
-      grayBox: "S 2nd &amp; T 4th Tue <br>All meetings are non-smoking.  No children allowed at meetings",
+      grayBox:
+        "S 2nd &amp; T 4th Tue <br>All meetings are non-smoking.  No children allowed at meetings",
       wheelChair: "",
     },
     hours: {
@@ -83,43 +84,45 @@ const data = [
     },
   },
 ];
+d3.json("./data/coordinates.json").then((data) => {
+  console.log(data.length);
 
+  let mapContainer = d3
+    .select(container)
+    .append("svg")
+    .attr("width", "100%")
+    .attr("height", "100%")
+    .style("position", "absolute")
+    .style("z-index", 2);
 
-let mapContainer = d3
-  .select(container)
-  .append("svg")
-  .attr("width", "100%")
-  .attr("height", "100%")
-  .style("position", "absolute")
-  .style("z-index", 2);
+  let circle = mapContainer
+    .selectAll("circle")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("id", (d, i) => i)
+    .attr("class", (d, i) => i)
+    .attr("r", "5")
+    .attr("fill", "#b3cbdd");
+  // .on('click', (d,i) => {
+  //   // let circleID =d3.select(this)["_groups"][0][0].id;
+  // })
 
-let circle = mapContainer
-  .selectAll("circle")
-  .data(data)
-  .enter()
-  .append("circle")
-  .attr("id", (d, i) => i)
-  .attr("class", (d, i) => i)
-  .attr("r", "12")
-  .attr("fill", "#b3cbdd");
-// .on('click', (d,i) => {
-//   // let circleID =d3.select(this)["_groups"][0][0].id;
-// })
+  function render() {
+    circle
+      .attr("cx", function (d) {
+        return projectPoint(d[1], d[0]).x;
+      })
+      .attr("cy", function (d) {
+        return projectPoint(d[1], d[0]).y;
+      });
+  }
 
-function render() {
-  circle
-    .attr("cx", function (d) {
-      return projectPoint(d.coordinates.x, d.coordinates.y).x;
-    })
-    .attr("cy", function (d) {
-      return projectPoint(d.coordinates.x, d.coordinates.y).y;
-    });
-}
-
-map.on("viewreset", render);
-map.on("move", render);
-map.on("moveend", render);
-render();
+  map.on("viewreset", render);
+  map.on("move", render);
+  map.on("moveend", render);
+  render();
+});
 
 const svg = document.querySelector("svg");
 const contentContainer = document.querySelector(".content-container");
@@ -138,44 +141,44 @@ for (let i = 0; i < data.length; i++) {
   contentContainer.innerHTML = innerHTML;
 }
 
-const content = document.querySelectorAll(".content");
-const circles = document.querySelectorAll("circle");
-console.log(circles);
+// const content = document.querySelectorAll(".content");
+// const circles = document.querySelectorAll("circle");
+// console.log(circles);
 
-svg.addEventListener("click", (event) => {
-  target = event.target.id;
-  for (let i = 0; i < content.length; i++) {
-    if (content[i].id === target) {
-      content[i].classList.add("clicked");
-    } else {
-      content[i].classList.remove("clicked");
-    }
-  }
+// svg.addEventListener("click", (event) => {
+//   target = event.target.id;
+//   for (let i = 0; i < content.length; i++) {
+//     if (content[i].id === target) {
+//       content[i].classList.add("clicked");
+//     } else {
+//       content[i].classList.remove("clicked");
+//     }
+//   }
 
-  for (let i = 0; i < circles.length; i++) {
-    if (circles[i].id === target) {
-      circles[i].attributes["fill"]["nodeValue"] = "#3e5a70";
-    } else {
-      circles[i].attributes["fill"]["nodeValue"] = "#b3cbdd";
-    }
-  }
-});
+//   for (let i = 0; i < circles.length; i++) {
+//     if (circles[i].id === target) {
+//       circles[i].attributes["fill"]["nodeValue"] = "#3e5a70";
+//     } else {
+//       circles[i].attributes["fill"]["nodeValue"] = "#b3cbdd";
+//     }
+//   }
+// });
 
-contentContainer.addEventListener("click", (event) => {
-  target = event.target;
-  console.log(target.classList[0]);
-  for (let i = 0; i < content.length; i++) {
-    if (
-      target.classList[0] === `metadata-${i}` ||
-      target.classList[0] === `content-${i}`
-    ) {
-      content[i].classList.add("clicked");
-      circles[i].attributes["fill"]["nodeValue"] = "#3e5a70";
-    } else {
-      content[i].classList.remove("clicked");
-      circles[i].attributes["fill"]["nodeValue"] = "#b3cbdd";
-    }
-  }
-});
+// contentContainer.addEventListener("click", (event) => {
+//   target = event.target;
+//   console.log(target.classList[0]);
+//   for (let i = 0; i < content.length; i++) {
+//     if (
+//       target.classList[0] === `metadata-${i}` ||
+//       target.classList[0] === `content-${i}`
+//     ) {
+//       content[i].classList.add("clicked");
+//       circles[i].attributes["fill"]["nodeValue"] = "#3e5a70";
+//     } else {
+//       content[i].classList.remove("clicked");
+//       circles[i].attributes["fill"]["nodeValue"] = "#b3cbdd";
+//     }
+//   }
+// });
 
 // search your location*************
